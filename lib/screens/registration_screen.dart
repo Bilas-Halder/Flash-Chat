@@ -10,6 +10,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  String email,password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,14 +35,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             InputTextField(
               hintText: 'Enter your email',
               onChanged: (String value){
-                print(value);
+                email=value;
               },
+              type: 'email',
             ),
             SizedBox(
               height: 8.0,
             ),
             InputTextField(
               hintText: 'Enter your password',
+              onChanged: (String value){
+                password=value;
+              },
+              type: 'password',
             ),
             SizedBox(
               height: 24.0,
@@ -49,7 +56,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               title: 'Register',
               color: Colors.blueAccent,
               onPressed: () {
-                Navigator.pushNamed(context, LoginScreen.path);
+                print(email);
+                print(password);
               },
             ),
           ],

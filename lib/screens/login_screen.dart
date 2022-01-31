@@ -34,12 +34,17 @@ class _LoginScreenState extends State<LoginScreen> {
               onChanged: (String value){
                 print(value);
               },
+              type: 'email',
             ),
             SizedBox(
               height: 8.0,
             ),
             InputTextField(
               hintText: 'Enter your password',
+              onChanged: (String value){
+                print(value);
+              },
+              type: 'password',
             ),
             SizedBox(
               height: 24.0,

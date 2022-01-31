@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 
 class InputTextField extends StatelessWidget {
   final hintText;
+  final String type;
   final Function (String) onChanged;
-  InputTextField({this.hintText,this.onChanged});
+  InputTextField({this.hintText,this.onChanged, this.type});
 
   @override
   Widget build(BuildContext context) {
+
+    String type = this.type!=null ? this.type : '';
+
     return TextField(
+      keyboardType: type.toLowerCase()=='email'? TextInputType.emailAddress: TextInputType.text,
+      obscureText: type.toLowerCase()=='password',
       onChanged: onChanged!=null?onChanged:(String){},
       decoration: InputDecoration(
         hintText: hintText,
