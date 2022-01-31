@@ -4,6 +4,8 @@ import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:provider/src/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class ChatScreen extends StatefulWidget {
   static final String path ='/chat';
@@ -12,8 +14,13 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+  final _fireStore = FirebaseFirestore.instance;
+  String massage;
   @override
   Widget build(BuildContext context) {
+
+    final user = context.watch <User>();
     return Scaffold(
       appBar: AppBar(
         leading: null,
@@ -47,14 +54,17 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        //Do something with the user input.
+                        massage=value;
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      //Implement send functionality.
+                      _fireStore.collection('messages').add({
+                        'text':massage,
+                        'sender':user.email
+                      });
                     },
                     child: Text(
                       'Send',
