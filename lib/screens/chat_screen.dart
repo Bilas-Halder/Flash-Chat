@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/Authentication/Authentication.dart';
+import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
+import 'package:provider/src/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   static final String path ='/chat';
@@ -18,9 +22,16 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.close),
               onPressed: () {
                 //Implement logout functionality
+                context.read<AuthenticationService>().signOut();
+                Navigator.pushNamed(context, WelcomeScreen.path);
               }),
         ],
-        title: Text('⚡️Chat'),
+        title: Row(
+          children: [
+            Hero(tag: 'logo', child: Text('⚡️'),),
+            Text(' Chat'),
+          ],
+        ),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
@@ -41,7 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: () {
                       //Implement send functionality.
                     },

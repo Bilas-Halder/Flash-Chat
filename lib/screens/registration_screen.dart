@@ -1,7 +1,10 @@
-import 'package:flash_chat/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flash_chat/Authentication/Authentication.dart';
+import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flash_chat/utilities/buttons.dart';
 import 'package:flash_chat/utilities/inputField.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static final String path ='/registration';
@@ -10,10 +13,16 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  //
+  // final _auth = FirebaseAuth.instance;
+
   String email,password;
 
   @override
   Widget build(BuildContext context) {
+
+    final user = context.watch <User>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -55,9 +64,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             LogInButton(
               title: 'Register',
               color: Colors.blueAccent,
-              onPressed: () {
-                print(email);
-                print(password);
+              onPressed: () async {
+                // print(email);
+                // print(password);
+
+                try{
+                  final msg = await context.read <AuthenticationService>().signUp(email: email, password: password);
+
+                  print(msg);
+                  if(msg == 'Signed Up'){
+                    Navigator.pushNamed(context, ChatScreen.path);
+                  }
+                }
+                catch (e){
+                  print(e);
+                }
+
               },
             ),
           ],

@@ -1,6 +1,10 @@
+import 'package:flash_chat/Authentication/Authentication.dart';
 import 'package:flash_chat/utilities/buttons.dart';
 import 'package:flash_chat/utilities/inputField.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
+
+import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static final String path ='/login';
@@ -9,6 +13,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  String email,password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
             InputTextField(
               hintText: 'Enter your email',
               onChanged: (String value){
-                print(value);
+                email=value;
               },
               type: 'email',
             ),
@@ -42,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
             InputTextField(
               hintText: 'Enter your password',
               onChanged: (String value){
-                print(value);
+                password = value;
               },
               type: 'password',
             ),
@@ -52,8 +59,18 @@ class _LoginScreenState extends State<LoginScreen> {
             LogInButton(
               title: 'Log In',
               color: Colors.lightBlueAccent,
-              onPressed: () {
-                Navigator.pushNamed(context, LoginScreen.path);
+              onPressed: () async {
+                try{
+                  final msg = await context.read <AuthenticationService>().signIn(email: email, password: password);
+
+                  print(msg);
+                  if(msg == 'Signed In'){
+                    Navigator.pushNamed(context, ChatScreen.path);
+                  }
+                }
+                catch (e){
+                  print(e);
+                }
               },
             ),
           ],
