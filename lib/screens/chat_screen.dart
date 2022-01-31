@@ -17,6 +17,17 @@ class _ChatScreenState extends State<ChatScreen> {
 
   final _fireStore = FirebaseFirestore.instance;
   String massage;
+
+  ///stream gives continuous data. if data is changed in database it will push a new data including the change in the data base. it's not replacing the past one it just adding new list of data into the stream.
+
+  void getMessagesStream() async{
+    await for (var snapshot in _fireStore.collection('messages').snapshots()){
+      for(var message in snapshot.docs){
+        print(message.data());
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -29,8 +40,10 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.close),
               onPressed: () {
                 //Implement logout functionality
-                context.read<AuthenticationService>().signOut();
-                Navigator.pushNamed(context, WelcomeScreen.path);
+                // context.read<AuthenticationService>().signOut();
+                // Navigator.pushNamed(context, WelcomeScreen.path);
+                getMessagesStream();
+
               }),
         ],
         title: Row(
