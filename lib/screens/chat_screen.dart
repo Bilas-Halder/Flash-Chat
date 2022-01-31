@@ -5,24 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:provider/src/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../messageStreamBuilder.dart';
 
 
 class ChatScreen extends StatefulWidget {
-  static final String path ='/chat';
+  static final String path = '/chat';
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   final _fireStore = FirebaseFirestore.instance;
+  final messageTextController = TextEditingController();
   String massage;
 
   ///stream gives continuous data. if data is changed in database it will push a new data including the change in the data base. it's not replacing the past one it just adding new list of data into the stream.
 
-  void getMessagesStream() async{
-    await for (var snapshot in _fireStore.collection('messages').snapshots()){
-      for(var message in snapshot.docs){
+  void getMessagesStream() async {
+    await for (var snapshot in _fireStore.collection('messages').snapshots()) {
+      for (var message in snapshot.docs) {
         print(message.data());
       }
     }
@@ -30,8 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    final user = context.watch <User>();
+    final user = context.watch<User>();
     return Scaffold(
       appBar: AppBar(
         leading: null,
@@ -43,22 +43,28 @@ class _ChatScreenState extends State<ChatScreen> {
                 // context.read<AuthenticationService>().signOut();
                 // Navigator.pushNamed(context, WelcomeScreen.path);
                 getMessagesStream();
-
               }),
         ],
         title: Row(
           children: [
-            Hero(tag: 'logo', child: Text('⚡️'),),
+            Hero(
+              tag: 'logo',
+              child: Text('⚡️'),
+            ),
             Text(' Chat'),
           ],
         ),
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor:  Color(0xff005880),
       ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            MessageStreamBuilder(
+              firestoreInstance: _fireStore,
+              user: user,
+            ),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -66,18 +72,19 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageTextController,
                       onChanged: (value) {
-                        massage=value;
+                        massage = value;
                       },
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      _fireStore.collection('messages').add({
-                        'text':massage,
-                        'sender':user.email
-                      });
+                      messageTextController.clear();
+                      _fireStore
+                          .collection('messages')
+                          .add({'text': massage, 'sender': user.email});
                     },
                     child: Text(
                       'Send',
@@ -93,3 +100,4 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
+
