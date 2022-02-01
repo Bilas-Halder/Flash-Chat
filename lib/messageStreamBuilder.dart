@@ -22,7 +22,7 @@ class MessageStreamBuilder extends StatelessWidget {
             ),
           );
         }
-        final messages = snapshot.data.docs.reversed;
+        final messages = snapshot.data.docs;
         int i = 1;
         for (var message in messages) {
           ///message.data() is just an object. so we have to convert it into map for using
