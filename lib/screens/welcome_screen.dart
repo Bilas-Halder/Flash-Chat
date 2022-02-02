@@ -14,10 +14,10 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+
   @override
   Widget build(BuildContext context) {
     final user = context.watch<User>();
-    print(user.toString() + '   from home');
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(

@@ -4,12 +4,14 @@ class InputTextField extends StatelessWidget {
   final hintText;
   final String type;
   final Function (String) onChanged;
-  InputTextField({this.hintText,this.onChanged, this.type});
+  final bool error;
+  InputTextField({this.hintText,this.onChanged, this.type, this.error});
 
   @override
   Widget build(BuildContext context) {
 
     String type = this.type!=null ? this.type : '';
+    Color color = error ? Colors.redAccent : Colors.blueAccent;
 
     return TextField(
       keyboardType: type.toLowerCase()=='email'? TextInputType.emailAddress: TextInputType.text,
@@ -23,11 +25,11 @@ class InputTextField extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(32.0)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blueAccent, width: 1.0),
+          borderSide: BorderSide(color: color, width: 1.0),
           borderRadius: BorderRadius.all(Radius.circular(32.0)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+          borderSide: BorderSide(color: color, width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(32.0)),
         ),
       ),

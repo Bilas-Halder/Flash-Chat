@@ -1,5 +1,6 @@
 import 'package:flash_chat/Authentication/Authentication.dart';
 import 'package:flash_chat/utilities/buttons.dart';
+import 'package:flash_chat/utilities/errorMessage.dart';
 import 'package:flash_chat/utilities/inputField.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
@@ -17,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String email,password;
   bool showSpinner = false;
+  bool error=false;
+  String errorMsg = "Error Occurred.";
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               InputTextField(
                 hintText: 'Enter your email',
+                error: error,
                 onChanged: (String value){
                   email=value;
                 },
@@ -54,10 +58,15 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               InputTextField(
                 hintText: 'Enter your password',
+                error: error,
                 onChanged: (String value){
                   password = value;
                 },
                 type: 'password',
+              ),
+              ErrorMessage(
+                errorMsg: errorMsg,
+                error: error,
               ),
               SizedBox(
                 height: 24.0,
@@ -69,12 +78,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   setState(() {
                     showSpinner=true;
                   });
+                  if(email==null || email == '' || password==null || password == ''){
+                    setState(() {
+                      error= true;
+                      errorMsg= "Email & Password required.";
+                      showSpinner=false;
+                    });
+                    return;
+                  }
+
                   try{
                     final msg = await context.read <AuthenticationService>().signIn(email: email, password: password);
 
                     print(msg);
                     if(msg == 'Signed In'){
+                      setState(() {
+                        error=false;
+                      });
                       Navigator.pushNamed(context, ChatScreen.path);
+                    }
+                    else{
+                      setState(() {
+                        error=true;
+                        errorMsg=msg;
+                      });
                     }
                   }
                   catch (e){
